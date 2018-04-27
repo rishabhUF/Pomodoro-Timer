@@ -2,14 +2,14 @@ $(document).ready(function () {
 
   //Set global variables
 
-  var pomodoro = 25, currentTime = Date.parse(new Date()), deadline, timeInterval, breakTime = 5, i, j=1;
+  var pomodoro = 25, currentTime = Date.parse(new Date()), deadline, timeInterval, breakTime = 5, i, j=0;
 
   //Display the clock
 
   var clock = document.getElementById("clock-timer");
   var minutesSpan = clock.querySelector(".minutes");
   var secondsSpan = clock.querySelector(".seconds");
-
+  var audio = document.getElementById("notification");
   $(".pomodoro-minutes-count").html(pomodoro);
   $(".break-minutes-count").html(breakTime);
   minutesSpan.innerHTML = ("0" + pomodoro).slice(-2);
@@ -39,6 +39,7 @@ $(document).ready(function () {
       $("title").html(("0" + t.minutes).slice(-2) + ":" + ("0" + t.seconds).slice(-2));
 
       if (t.total <= 0) { //If timer reaches zero, stop the timer and reset the clock
+        audio.play();
         clearInterval(timeInterval);
         if(j <= 8)
           {
@@ -62,16 +63,17 @@ $(document).ready(function () {
   function setPomodoroTime(){
     if(j < 5){
         console.log(j)
-        pomodoro = 1
+        pomodoro = 25;
       console.log(pomodoro);
     }
     else{
-      pomodoro = 1;
+      pomodoro = 15;
     } 
   }
   //Functions for pomodoro, break and reset
 
   function startPomodoro () {
+     j+=1;
     setPomodoroTime();
     console.log(pomodoro);
     minutesSpan.innerHTML = ("0" + pomodoro).slice(-2);
@@ -82,7 +84,6 @@ $(document).ready(function () {
     $("body").css('background-color', '#2ECC71');
     deadline = new Date(Date.parse(new Date()) + (pomodoro * 60 * 1000));
     console.log(deadline)
-    j+=1;
     console.log("j "+j);
     startClock();
     i = 0;
@@ -102,6 +103,7 @@ $(document).ready(function () {
   }
 
   function resetClock () {
+    j = 0;
     $(".btn-count").prop("disabled", false);
     $("body").css('background-color', '#F1C40F');
     $(".start-pomodoro, .break, .session-length").removeClass('hidden');
@@ -128,12 +130,12 @@ $(document).ready(function () {
         breakTime = 15;
     }
     else if(j == 6){
-        breakTime = 1;
+        breakTime = 20;
     }
     else if(j == 7){
-        breakTime = 1;
+        breakTime = 25;
     }
-    else if(j == 8){
+    else if(j >= 8){
         breakTime = 30;
     } 
   }
